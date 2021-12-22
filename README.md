@@ -1,5 +1,12 @@
 # todo-web
 
+간단한 Todo List 입니다.
+
+## 개요
+ - Vuejs
+ - ant design vue library
+ - Html, JavaScript, sass
+
 ## Project setup
 ```
 yarn install
