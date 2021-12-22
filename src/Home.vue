@@ -15,7 +15,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 body * {
   box-sizing: border-box;
   margin: 0;
@@ -32,9 +32,9 @@ body * {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-}
 
-.home-check {
-  margin: 20px 0;
+  .home-check {
+    margin: 20px 0;
+  }
 }
 </style>
