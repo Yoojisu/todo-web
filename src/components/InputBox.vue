@@ -1,12 +1,16 @@
 <template>
   <div>
-    <a-input placeholder="할 일을 입력해주세요." />
+    <a-input :placeholder="text" type="text" />
   </div>
 </template>
 
 <script>
 export default {
   name: "InputBox",
+
+  props: {
+    text: String,
+  },
 };
 </script>
 
