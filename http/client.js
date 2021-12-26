@@ -3,7 +3,7 @@ import axios, { create }  from 'axios';
 const port = 5000;
 const host = `localhost:${port}`;
 
-const axiosConfig = create({
+const axiosConfig = {
   baseURL:`http://${host}/api`,
   withCredentials: true,
   headers:{
@@ -12,7 +12,7 @@ const axiosConfig = create({
     "Access-Control-Allow-Origin": "*"
   },
   timeout: 30000
-});
+};
 
 const axiosClient = axios.create(axiosConfig);
 
