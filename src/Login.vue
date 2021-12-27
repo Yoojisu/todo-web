@@ -24,7 +24,8 @@ export default {
   methods: {
     async loginBtn() {
       try {
-        await Auth.login(this.loginForm.id, this.loginForm.password);
+        let result = await Auth.login(this.loginForm.id, this.loginForm.password);
+        this.$cookie.set("accesstoken", result.password, { expires: "1D" });
         this.$router.push("/home");
       } catch (e) {
         throw e;

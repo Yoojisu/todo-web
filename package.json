@@ -16,6 +16,7 @@
     "sass-loader": "10",
     "typescript": "^4.5.4",
     "vue": "^2.6.11",
+    "vue-cookie": "^1.1.4",
     "vue-router": "^3.5.3"
   },
   "devDependencies": {
