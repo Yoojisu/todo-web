@@ -23,9 +23,12 @@ export default {
 
   methods: {
     async loginBtn() {
-      let result = await Auth.login("/Auth/login", this.loginForm);
-
-      console.log(result);
+      try {
+        await Auth.login(this.loginForm.id, this.loginForm.password);
+        this.$router.push("/home");
+      } catch (e) {
+        throw e;
+      }
     },
   },
 };
