@@ -8,6 +8,9 @@
 
 <script>
 import Auth from "../http/auth";
+//import Client from "../http/client";
+import store from "../store/index";
+//import { mapState, mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Login",
@@ -24,11 +27,28 @@ export default {
   methods: {
     async loginBtn() {
       try {
-        let result = await Auth.login(this.loginForm.id, this.loginForm.password);
-        this.$cookie.set("accesstoken", result.password, { expires: "1D" });
-        this.$router.push("/home");
+        await store.dispatch("login", this.loginForm);
+
+        if (store.state.accessToken) {
+          this.$router.push("/home");
+        }
+
+        // const cookie = this.$cookie.get(".AspNetCore.Cookies");
+
+        // const isAuth = await Client.get("/Auth/self", {
+        //   headers: {
+        //     Cookie: cookie,
+        //   },
+        // });
+
+        // // const res = await Client.get("/Auth/self", null, {
+        // //   Cookie: client.req.headers.cookie,
+        // // });
+
+        // console.log("res", isAuth);
       } catch (e) {
         throw e;
+      } finally {
       }
     },
   },
