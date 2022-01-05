@@ -15,7 +15,10 @@ export default class Auth  {
     return await Client.post(`${path}`, index);
   }
 
-  static async update(data){
-    return await Client.get(`${path}`,{data});
+  static async update( data){
+    return await Client.post(`${path}/${data.index}`,{
+      Contents:data.contents,
+      IsChecked: data.isChecked
+    });
   }
 }

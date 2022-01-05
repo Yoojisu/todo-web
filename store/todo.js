@@ -20,8 +20,13 @@ const todo = new Vuex.Store({
     },
   
     async loadTodo({commit}, filter){
-      console.log(filter);
       let result = await Todo.loadTodoList(filter);
+      commit('loadTodo', result);
+    },
+
+    async updateTodo({commit}, data){
+     let result = await Todo.update(data);
+     console.log(result);
       commit('loadTodo', result);
     }
 },

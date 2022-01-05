@@ -1,32 +1,44 @@
 <template>
   <div id="home">
-    <!-- <a-date-picker @change="onChangeDate" /> -->
+    <div class="home-date">
+      <a-date-picker :default-value="moment().format('YYYY-MM-DD')" @change="onChangeDate" :allowClear="false" />
+    </div>
     <div class="home-input">
       <a-input placeholder="할 일을 입력해주세요." v-model="contents" />
       <a-button type="primary" @click="submit"> 입력 </a-button>
     </div>
-    <div class="check-container" v-for="(item, index) in todoResult" :key="index">
-      <a-checkbox @change="onChange"> {{ item.contents }} </a-checkbox>
+    <div v-if="todoCount !== 0">
+      <div class="check-container" v-for="(item, index) in todoResult" :key="index">
+        <a-checkbox :class="{ selected: item.isChecked }" :checked="item.isChecked" @change="onChange(item)"> {{ item.contents }} </a-checkbox>
+      </div>
     </div>
+    <div v-else><a-empty /></div>
+
+    <a-pagination class="home-page" v-model="pagination.current" :page-size="filter.take" :total="todoCount" @change="onChangePagination()" />
   </div>
 </template>
 
 <script>
 import todoStore from "../store/todo";
+import moment from "moment";
 
 export default {
   name: "Home",
 
   data() {
     return {
+      moment: moment,
       contents: "",
       todoResult: [],
       todoCount: 0,
+      pagination: {
+        current: 1,
+      },
       filter: {
         search: "",
         skip: 0,
         take: 10,
-        date: "",
+        date: moment().format("YYYY-MM-DD"),
       },
     };
   },
@@ -36,21 +48,57 @@ export default {
     this.todoResult = todoStore.state.todoList.todoList;
     this.todoCount = todoStore.state.todoList.totalCount;
   },
+
   methods: {
-    submit() {
-      console.log(this.contents);
+    async submit() {
+      if (moment().format("YYYY-MM-DD") !== this.filter.date) {
+        this.$error({
+          title: "오늘 날짜가 아닙니다.",
+        });
+        return;
+      }
+
       if (this.contents === "") {
         this.$error({
           title: "텍스트를 입력해주세요.",
         });
         return;
       }
-      todoStore.dispatch("create", this.contents);
+
+      await todoStore.dispatch("create", this.contents);
+      await this.getList(this.filter);
+      await todoStore.dispatch("loadTodo", this.filter);
+      this.todoResult = todoStore.state.todoList.todoList;
+      this.todoCount = todoStore.state.todoList.totalCount;
+      this.contents = "";
     },
 
-    // onChangeDate(date, dateString) {
-    //   console.log(date, dateString);
-    // },
+    async onChange(item) {
+      item.isChecked = !item.isChecked;
+
+      let todoForm = {
+        index: item.index,
+        contents: this.contents,
+        isChecked: item.isChecked,
+      };
+      await todoStore.dispatch("updateTodo", todoForm);
+    },
+
+    async onChangeDate(date, dateString) {
+      this.filter.date = dateString;
+      await this.getList(this.filter);
+    },
+
+    async onChangePagination() {
+      this.filter.skip = this.pagination.current;
+      await this.getList(this.filter);
+    },
+
+    async getList(filter) {
+      await todoStore.dispatch("loadTodo", filter);
+      this.todoResult = todoStore.state.todoList.todoList;
+      this.todoCount = todoStore.state.todoList.totalCount;
+    },
   },
 };
 </script>
@@ -62,24 +110,21 @@ body * {
 }
 
 #home {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-  width: calc(100% * 1 / 3);
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-
   .home-check {
     margin: 20px 0;
   }
 
+  .home-date {
+    margin: 10px 0;
+
+    .ant-calendar-picker {
+      width: 100%;
+    }
+  }
+
   .home-input {
     display: flex;
-    margin: 20px 0;
+    margin: 10px 0;
   }
 
   .check-container {
@@ -87,6 +132,16 @@ body * {
     padding: 10px 20px;
     text-align: left;
     border-radius: 2px;
+
+    .ant-checkbox-wrapper {
+      &.selected {
+        text-decoration: line-through;
+      }
+    }
+  }
+
+  .home-page {
+    margin: 10px 0;
   }
 }
 </style>

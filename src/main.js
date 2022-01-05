@@ -12,6 +12,6 @@ Vue.use(Antd);
 new Vue({
   router,
   vueCookie,
+  store:store,
   ...App,
-  store:store
 }).$mount('#app')
