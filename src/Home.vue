@@ -9,11 +9,15 @@
     </div>
     <div v-if="todoCount !== 0">
       <div class="check-container" v-for="(item, index) in todoResult" :key="index">
-        <a-checkbox :class="{ selected: item.isChecked }" :checked="item.isChecked" @change="onChange(item)"> {{ item.contents }} </a-checkbox>
+        <div class="check-wrapper">
+          <a-checkbox :class="{ selected: item.isChecked }" :checked="item.isChecked" @change="onChange(item)">
+            <div>{{ item.contents }}</div>
+          </a-checkbox>
+          <a-icon @click="onDelete(item.index)" class="check-del" type="delete" />
+        </div>
       </div>
     </div>
     <div v-else><a-empty /></div>
-
     <a-pagination class="home-page" v-model="pagination.current" :page-size="filter.take" :total="todoCount" @change="onChangePagination()" />
   </div>
 </template>
@@ -94,6 +98,11 @@ export default {
       await this.getList(this.filter);
     },
 
+    async onDelete(index) {
+      await todoStore.dispatch("deleteTodo", index);
+      await this.getList(this.filter);
+    },
+
     async getList(filter) {
       await todoStore.dispatch("loadTodo", filter);
       this.todoResult = todoStore.state.todoList.todoList;
@@ -133,7 +142,26 @@ body * {
     text-align: left;
     border-radius: 2px;
 
+    .check-wrapper {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+
+      .check-del {
+        cursor: pointer;
+        color: red;
+        opacity: 0.5;
+
+        &:hover {
+          transition: 0.3s all;
+          opacity: 1;
+        }
+      }
+    }
+
     .ant-checkbox-wrapper {
+      display: flex;
+      width: 100%;
       &.selected {
         text-decoration: line-through;
       }

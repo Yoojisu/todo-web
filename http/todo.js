@@ -12,7 +12,7 @@ export default class Auth  {
   }
 
   static async delete(index){
-    return await Client.post(`${path}`, index);
+    return await Client.del(`${path}/${index}`);
   }
 
   static async update( data){

@@ -28,6 +28,12 @@ const todo = new Vuex.Store({
      let result = await Todo.update(data);
      console.log(result);
       commit('loadTodo', result);
+    },
+
+    async deleteTodo({commit}, index){
+      let result = await Todo.delete(index);
+      commit('loadTodo', result);
+
     }
 },
 })
