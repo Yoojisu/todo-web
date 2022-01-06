@@ -24,7 +24,13 @@ const routes = [
     path:"/home",
     name:"home",
     component: Home,
-   // beforeEnter: auth()
+    beforeRouteEnter: (to,from,next) =>{
+      console.log('session ',sessionStorage.getItem('accessToken') );
+      if(sessionStorage.getItem('accessToken') == null){
+        next('/')
+      }
+    }
+    // meta:{ authRequred: true }
   }
 ]
 
@@ -34,10 +40,12 @@ const router = new VueRouter({
 })
 
 // router.beforeEach(async(to, from, next) => {
-// const cookie = VueCookie.get(".AspNetCore.Cookies")
-//   if(cookie){
-//     console.log('cookie',cookie);
-//     return next({path:"/home"});
+//   if(to.matched.some(routeInfo => {
+//     return routeInfo.meta.authRequred;
+//   })) {
+//     alert('로그인 필요');
+//   }else{
+//     next();
 //   }
 // })
 

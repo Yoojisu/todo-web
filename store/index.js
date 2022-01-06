@@ -2,10 +2,12 @@ import Vuex from 'vuex';
 import Vue from 'vue';
 import Auth from "../http/auth";
 import vueCookie from 'vue-cookie';
+import Client from "../http/client";
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
+
   state: {
     accessToken: null,
     userInfo:{}
@@ -25,8 +27,9 @@ const store = new Vuex.Store({
         state.accessToken = null;
       }
     },
-    isAuth(state, {userInfo}){
+    isAuth(state, userInfo){
       state.userInfo = userInfo;
+      console.log(state.userInfo);
     }
   },
 
@@ -37,11 +40,12 @@ const store = new Vuex.Store({
     },
 
     async isAuth({commit}, {cookie}){
-      return await Client.get("/Auth/self", {
-        headers: {
-          Cookie: cookie,
-        },
-      }).then(({data}) => commit("isAuth", data));
+     let result = await Client.get("/Auth/self", {
+      headers:{
+        Cookie:cookie
+      }
+     });
+     commit("isAuth", result);
     }
   }
 });

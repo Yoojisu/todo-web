@@ -33,19 +33,7 @@ export default {
           this.$router.push("/home");
         }
 
-        // const cookie = this.$cookie.get(".AspNetCore.Cookies");
-
-        // const isAuth = await Client.get("/Auth/self", {
-        //   headers: {
-        //     Cookie: cookie,
-        //   },
-        // });
-
-        // // const res = await Client.get("/Auth/self", null, {
-        // //   Cookie: client.req.headers.cookie,
-        // // });
-
-        // console.log("res", isAuth);
+        sessionStorage.setItem("accessToken", this.$cookie.get(".AspNetCore.Cookies"));
       } catch (e) {
         throw e;
       } finally {
