@@ -1,0 +1,20 @@
+$light-gray: #bec3cb;
+$mint: #31d49f;
+$white-1: #ffffff;
+
+* {
+  &.light-gray,
+  &[light-gray] {
+    color: $light-gray;
+  }
+
+  &.mint,
+  &[mint] {
+    color: $mint;
+  }
+
+  &.white-1,
+  &[white-1] {
+    color: $white-1;
+  }
+}

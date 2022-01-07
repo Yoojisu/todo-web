@@ -1,0 +1,7 @@
+@import "./color.scss";
+
+@mixin backgroundBox($radius, $color) {
+  border-radius: $radius;
+  background-color: $color;
+  box-shadow: 4px 4px 10px 1px $light-gray;
+}

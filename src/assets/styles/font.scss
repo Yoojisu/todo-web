@@ -1,0 +1,21 @@
+@for $i from 10 through 40 {
+  .fs-#{$i} {
+    font-size: #{$i}px;
+  }
+}
+
+.ta-c {
+  text-align: center !important;
+}
+
+.ta-l {
+  text-align: left !important;
+}
+
+.lighter {
+  font-weight: lighter !important;
+}
+
+.bold {
+  font-weight: bold !important;
+}
