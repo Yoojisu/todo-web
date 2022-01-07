@@ -1,23 +1,34 @@
 <template>
-  <div id="home">
-    <div class="home-date">
+  <div class="home-container" id="home">
+    <div class="home-date" df fdc>
+      <div class="home-title">
+        <div class="fs-20 bold ta-l">{{ filter.date }}</div>
+        <div v-if="dayText" class="ta-l fs-12">{{ getDay }}</div>
+        <div class="ta-l mint fs-12">할 일</div>
+      </div>
+
       <a-date-picker :default-value="moment().format('YYYY-MM-DD')" @change="onChangeDate" :allowClear="false" />
     </div>
     <div class="home-input">
       <a-input placeholder="할 일을 입력해주세요." v-model="contents" />
       <a-button type="primary" @click="submit"> 입력 </a-button>
     </div>
-    <div v-if="todoCount !== 0">
-      <div class="check-container" v-for="(item, index) in todoResult" :key="index">
-        <div class="check-wrapper">
-          <a-checkbox :class="{ selected: item.isChecked }" :checked="item.isChecked" @change="onChange(item)">
-            <div>{{ item.contents }}</div>
-          </a-checkbox>
-          <a-icon @click="onDelete(item.index)" class="check-del" type="delete" />
+    <div class="home-list">
+      <div v-if="todoCount !== 0">
+        <div class="check-container" v-for="(item, index) in todoResult" :key="index">
+          <div class="check-wrapper">
+            <a-checkbox :class="{ selected: item.isChecked }" :checked="item.isChecked" @change="onChange(item)">
+              <div>{{ item.contents }}</div>
+            </a-checkbox>
+            <a-icon @click="onDelete(item.index)" class="check-del" type="delete" />
+          </div>
         </div>
       </div>
+      <div v-else><a-empty /></div>
     </div>
-    <div v-else><a-empty /></div>
+    <div>
+      <base-todo :listLoading.sync="isLoading"></base-todo>
+    </div>
     <a-pagination class="home-page" v-model="pagination.current" :page-size="filter.take" :total="todoCount" @change="onChangePagination()" />
   </div>
 </template>
@@ -25,9 +36,14 @@
 <script>
 import todoStore from "../store/todo";
 import moment from "moment";
+import BaseTodo from "./assets/layouts/BaseTodo.vue";
+import dateUtils from "../utils/dateTransform";
 
 export default {
   name: "Home",
+  components: {
+    BaseTodo,
+  },
 
   data() {
     return {
@@ -44,13 +60,33 @@ export default {
         take: 10,
         date: moment().format("YYYY-MM-DD"),
       },
+      isLoading: true,
+      dayText: "",
     };
   },
 
   async mounted() {
-    await todoStore.dispatch("loadTodo", this.filter);
-    this.todoResult = todoStore.state.todoList.todoList;
-    this.todoCount = todoStore.state.todoList.totalCount;
+    try {
+      this.isLoading = true;
+      await todoStore.dispatch("loadTodo", this.filter);
+      this.todoResult = todoStore.state.todoList.todoList;
+      this.todoCount = todoStore.state.todoList.totalCount;
+      console.log(moment(this.filter.data).day());
+      this.dayText = dateUtils.dayTransform(moment(this.filter.data).day());
+    } finally {
+      this.isLoading = false;
+    }
+  },
+
+  computed: {
+    getDay: {
+      get() {
+        return this.dayText;
+      },
+      set(value) {
+        this.dayText = dateUtils.dayTransform(moment(value).day());
+      },
+    },
   },
 
   methods: {
@@ -91,6 +127,7 @@ export default {
     async onChangeDate(date, dateString) {
       this.filter.date = dateString;
       await this.getList(this.filter);
+      this.getDay = dateString;
     },
 
     async onChangePagination() {
@@ -113,18 +150,31 @@ export default {
 </script>
 
 <style lang="scss">
-// body * {
-//   box-sizing: border-box;
-//   margin: 0;
-// }
+@import "~/src/assets/styles/flex.scss";
+@import "~/src/assets/styles/box.scss";
+@import "~/src/assets/styles/color.scss";
+@import "~/src/assets/styles/font.scss";
+@import "~/src/assets/styles/response.scss";
 
-#home {
+.home-container {
+  margin: 0 auto;
+  width: calc(100% * 1 / 3) !important;
+
+  @include response("tablet") {
+    width: calc(100% * 2 / 3) !important;
+  }
+
+  @include backgroundBox(10px, $white-1);
+  padding: 30px 20px;
+
   .home-check {
     margin: 20px 0;
   }
 
   .home-date {
-    margin: 10px 0;
+    .home-title {
+      margin-bottom: 20px;
+    }
 
     .ant-calendar-picker {
       width: 100%;
@@ -136,16 +186,22 @@ export default {
     margin: 10px 0;
   }
 
+  .home-list {
+    padding: 20px;
+  }
+
   .check-container {
-    background-color: #fff3c9;
-    padding: 10px 20px;
+    padding: 5px 0;
     text-align: left;
-    border-radius: 2px;
 
     .check-wrapper {
       display: flex;
       flex-direction: row;
       width: 100%;
+
+      .ant-checkbox-wrapper {
+        align-items: center;
+      }
 
       .check-del {
         cursor: pointer;
@@ -164,6 +220,8 @@ export default {
       width: 100%;
       &.selected {
         text-decoration: line-through;
+        color: $light-gray-2;
+        opacity: 0.8;
       }
     }
   }
