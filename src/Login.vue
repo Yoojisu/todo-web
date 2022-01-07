@@ -47,8 +47,16 @@ export default {
 @import "~/src/assets/styles/box.scss";
 @import "~/src/assets/styles/color.scss";
 @import "~/src/assets/styles/font.scss";
+@import "~/src/assets/styles/response.scss";
 
 .login-container {
+  margin: 0 auto;
+  width: calc(100% * 1 / 4) !important;
+
+  @include response("tablet") {
+    width: calc(100% * 2 / 4) !important;
+  }
+
   .login-box {
     margin-top: 20px;
     padding: 40px 30px;

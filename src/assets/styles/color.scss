@@ -1,4 +1,5 @@
 $light-gray: #bec3cb;
+$light-gray-2: #afabab;
 $mint: #31d49f;
 $white-1: #ffffff;
 
@@ -16,5 +17,10 @@ $white-1: #ffffff;
   &.white-1,
   &[white-1] {
     color: $white-1;
+  }
+
+  &.light-gray-2,
+  &[light-gray-2] {
+    color: $light-gray-2;
   }
 }

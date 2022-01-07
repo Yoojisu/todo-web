@@ -3,7 +3,7 @@
     @media screen and (max-width: 570px) {
       @content;
     }
-  } @else if $breakPoint == "table" {
+  } @else if $breakPoint == "tablet" {
     @media screen and (max-width: 1024px) {
       @content;
     }
