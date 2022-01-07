@@ -19,7 +19,6 @@ const store = new Vuex.Store({
   
   mutations:{
     login(state, user){
-      console.log(user);
       if(user){
         state.userInfo = user;
         state.accessToken = vueCookie.get(".AspNetCore.Cookies");
@@ -29,7 +28,6 @@ const store = new Vuex.Store({
     },
     isAuth(state, userInfo){
       state.userInfo = userInfo;
-      console.log(state.userInfo);
     }
   },
 

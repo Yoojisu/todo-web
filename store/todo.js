@@ -26,7 +26,6 @@ const todo = new Vuex.Store({
 
     async updateTodo({commit}, data){
      let result = await Todo.update(data);
-     console.log(result);
       commit('loadTodo', result);
     },
 

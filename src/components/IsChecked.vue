@@ -9,9 +9,7 @@ export default {
   name: "IsChecked",
 
   methods: {
-    onChange(e) {
-      console.log(e);
-    },
+    onChange(e) {},
   },
 };
 </script>

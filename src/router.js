@@ -25,7 +25,6 @@ const routes = [
     name:"home",
     component: Home,
     beforeRouteEnter: (to,from,next) =>{
-      console.log('session ',sessionStorage.getItem('accessToken') );
       if(sessionStorage.getItem('accessToken') == null){
         next('/')
       }
