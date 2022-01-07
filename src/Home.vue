@@ -4,7 +4,7 @@
       <div class="home-title">
         <div class="fs-20 bold ta-l">{{ filter.date }}</div>
         <div v-if="dayText" class="ta-l fs-12">{{ getDay }}</div>
-        <div class="ta-l mint fs-12">할 일</div>
+        <div class="ta-l mint fs-12">할 일이 {{ getCount }}개 남았습니다.</div>
       </div>
 
       <a-date-picker :default-value="moment().format('YYYY-MM-DD')" @change="onChangeDate" :allowClear="false" />
@@ -51,6 +51,7 @@ export default {
       contents: "",
       todoResult: [],
       todoCount: 0,
+      todoDoneCount: 0,
       pagination: {
         current: 1,
       },
@@ -71,8 +72,8 @@ export default {
       await todoStore.dispatch("loadTodo", this.filter);
       this.todoResult = todoStore.state.todoList.todoList;
       this.todoCount = todoStore.state.todoList.totalCount;
-      console.log(moment(this.filter.data).day());
       this.dayText = dateUtils.dayTransform(moment(this.filter.data).day());
+      this.getCount = this.todoResult;
     } finally {
       this.isLoading = false;
     }
@@ -85,6 +86,15 @@ export default {
       },
       set(value) {
         this.dayText = dateUtils.dayTransform(moment(value).day());
+      },
+    },
+
+    getCount: {
+      get() {
+        return this.todoCount - this.todoDoneCount;
+      },
+      set(value) {
+        this.todoDoneCount = value.filter((data) => data.isChecked).length;
       },
     },
   },
