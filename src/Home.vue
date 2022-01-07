@@ -113,10 +113,10 @@ export default {
 </script>
 
 <style lang="scss">
-body * {
-  box-sizing: border-box;
-  margin: 0;
-}
+// body * {
+//   box-sizing: border-box;
+//   margin: 0;
+// }
 
 #home {
   .home-check {

@@ -16,7 +16,6 @@ new Vue({
   ...App,
   created(){
     const token = sessionStorage.getItem('accessToken');
-    console.log(token);
     if(token !== null){
       store.dispatch("isAuth", token);
     }
